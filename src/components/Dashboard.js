@@ -35,7 +35,16 @@ class Dashboard extends Component {
       loading: false,
       focused: null
     }
+
+    this.selectPanel = this.selectPanel.bind(this) // set scope of 'this' in the select panel function
   };
+
+  selectPanel(id) {
+    // if the foucsed is truth, set to null, else set to the id
+    this.setState(prevState => ({
+      focused : prevState.focused ? null : id
+    }));
+  }
 
   render() {
     const dashboardClasses = classnames("dashboard", {
@@ -44,17 +53,18 @@ class Dashboard extends Component {
 
     const panels = data
       .filter(
-        panel => this.state.focused = null || this.state.focused === panel.id
+        panel => this.state.focused === null || this.state.focused === panel.id
         // if the focused is null, every panel pass, else, only the match goes through
       )
       .map((panel) => {
         return <Panel 
         key = {panel.id}
-        id = {panel.id}
         label = {panel.label}
         value = {panel.value}
+        onSelect = {event => this.selectPanel(panel.id)}
         />
       })
+
     if (this.state.loading) {
       return <Loading />
     }
